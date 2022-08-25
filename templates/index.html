@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<ul id="list-message">
+
+</ul>
+<input type="text" id="message" placeholder="">
+<button onclick="clickBtn()">Click</button>
+<script src="./socket.io/socket.io.js"></script>
+<script>
+    let socket = io('http://localhost:8000');
+    let nameChat = prompt('nhap ten chat');
+
+    socket.emit('user-joined', nameChat)
+
+    function clickBtn() {
+        let message = document.getElementById('message').value;
+        let data = {
+            name: nameChat,
+            message: message
+        }
+        socket.emit('btn-click', data)
+    }
+
+    socket.on('say-message', (data) => {
+        let html = "<li>" + data + "</li>"
+        document.getElementById('list-message').innerHTML += html
+     })
+
+    socket.on('user-disconnect', (data) => {
+        let html = "<li>" + data + "</li>"
+        document.getElementById('list-message').innerHTML += html
+    })
+
+</script>
+</body>
+</html>
